@@ -20,14 +20,7 @@ A full-stack Expense Tracker application built using the **MERN stack** (MongoDB
 | Recharts (Pie Chart) | MongoDB |
 | Axios | JWT (jsonwebtoken) |
 
-## 📸 Screenshots
 
-> You can add images or demo GIFs here later using:
-> `![screenshot](./screenshots/demo1.png)`
-
----
-
-## 🧑‍💻 Getting Started
 
 ### Prerequisites
 
