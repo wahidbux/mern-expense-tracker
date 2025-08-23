@@ -6,7 +6,6 @@ A full-stack Expense Tracker application built using the **MERN stack** (MongoDB
 
 - 🔐 **User Authentication** (Register / Login using JWT)
 - ➕ **Add, Edit, Delete Expenses**
-- 📅 **Track Expenses by Date, Category**
 - 📊 **Visual Summary** with Pie Chart
 - 🌙 **Dark Mode Ready** (optional)
 - 📱 **Fully Responsive Design**
@@ -33,3 +32,4 @@ A full-stack Expense Tracker application built using the **MERN stack** (MongoDB
 ```bash
 git clone https://github.com/Sathvikaeshkilla/mern-expense-tracker.git
 cd mern-expense-tracker
+
