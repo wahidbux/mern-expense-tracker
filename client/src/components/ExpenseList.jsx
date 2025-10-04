@@ -10,6 +10,10 @@ export default function ExpenseList({ expenses: initialExpenses }) {
     category: '',
     date: '',
   });
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterStartDate, setFilterStartDate] = useState('');
+  const [filterEndDate, setFilterEndDate] = useState('');
+  const [sortBy, setSortBy] = useState('date-desc');
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -74,15 +78,93 @@ export default function ExpenseList({ expenses: initialExpenses }) {
       alert('❌ Could not update expense');
     }
   };
+  const filteredAndSortedExpenses = expenses
+    .filter((expense) => {
+      if (filterCategory && expense.category.toLowerCase() !== filterCategory.toLowerCase()) {
+        return false;
+      }
+      if (filterStartDate && new Date(expense.date) < new Date(filterStartDate)) {
+        return false;
+      }
+      if (filterEndDate && new Date(expense.date) > new Date(filterEndDate)) {
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'date-asc') {
+        return new Date(a.date) - new Date(b.date);
+      } else if (sortBy === 'date-desc') {
+        return new Date(b.date) - new Date(a.date);
+      } else if (sortBy === 'category-asc') {
+        return a.category.localeCompare(b.category);
+      } else if (sortBy === 'category-desc') {
+        return b.category.localeCompare(a.category);
+      }
+      return 0;
+    });
+  const categories = [...new Set(expenses.map((expense) => expense.category))];
 
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6 text-center text-green-600">💸 Expense History</h2>
-      {expenses.length === 0 ? (
+      <div className="mb-6 p-4 bg-gray-50 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-4">Filter & Sort</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block font-semibold mb-1">Category</label>
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-green-400"
+            >
+              <option value="">All Categories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block font-semibold mb-1">Start Date</label>
+            <input
+              type="date"
+              value={filterStartDate}
+              onChange={(e) => setFilterStartDate(e.target.value)}
+              className="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+          <div>
+            <label className="block font-semibold mb-1">End Date</label>
+            <input
+              type="date"
+              value={filterEndDate}
+              onChange={(e) => setFilterEndDate(e.target.value)}
+              className="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+          <div>
+            <label className="block font-semibold mb-1">Sort By</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-green-400"
+            >
+              <option value="date-desc">Date (Newest First)</option>
+              <option value="date-asc">Date (Oldest First)</option>
+              <option value="category-asc">Category (A-Z)</option>
+              <option value="category-desc">Category (Z-A)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {filteredAndSortedExpenses.length === 0 ? (
         <p className="text-gray-500 text-center">No expenses found.</p>
       ) : (
         <ul className="space-y-4">
-          {expenses.map((expense) => (
+          {filteredAndSortedExpenses.map((expense) => (
             <li
               key={expense._id}
               className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4"
