@@ -87,6 +87,32 @@ export default function ExpenseList({ expenses: initialExpenses }) {
       alert("❌ Could not update expense");
     }
   };
+  const filteredAndSortedExpenses = expenses
+    .filter((expense) => {
+      if (filterCategory && expense.category.toLowerCase() !== filterCategory.toLowerCase()) {
+        return false;
+      }
+      if (filterStartDate && new Date(expense.date) < new Date(filterStartDate)) {
+        return false;
+      }
+      if (filterEndDate && new Date(expense.date) > new Date(filterEndDate)) {
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'date-asc') {
+        return new Date(a.date) - new Date(b.date);
+      } else if (sortBy === 'date-desc') {
+        return new Date(b.date) - new Date(a.date);
+      } else if (sortBy === 'category-asc') {
+        return a.category.localeCompare(b.category);
+      } else if (sortBy === 'category-desc') {
+        return b.category.localeCompare(a.category);
+      }
+      return 0;
+    });
+  const categories = [...new Set(expenses.map((expense) => expense.category))];
 
   return (
     <div>
@@ -130,7 +156,7 @@ export default function ExpenseList({ expenses: initialExpenses }) {
         <p className="text-gray-500 text-center">No expenses found.</p>
       ) : (
         <ul className="space-y-4">
-          {expenses.map((expense) => (
+          {filteredAndSortedExpenses.map((expense) => (
             <li
               key={expense._id}
               className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4"
