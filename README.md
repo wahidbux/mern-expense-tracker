@@ -27,9 +27,23 @@ A full-stack Expense Tracker application built using the **MERN stack** (MongoDB
 - MongoDB (running locally or Atlas)
 - Git
 
+
+
+
+
+###open for enhancements 
+-People are open to raise issues and solve them
+
+
+
 ### Clone the repo
 
 ```bash
 git clone https://github.com/Sathvikaeshkilla/mern-expense-tracker.git
 cd mern-expense-tracker
+
+
+
+
+
 
