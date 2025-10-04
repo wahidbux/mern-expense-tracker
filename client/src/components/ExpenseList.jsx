@@ -1,84 +1,132 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function ExpenseList({ expenses: initialExpenses }) {
   const [expenses, setExpenses] = useState(initialExpenses || []);
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({
-    title: '',
-    amount: '',
-    category: '',
-    date: '',
+    title: "",
+    amount: "",
+    category: "",
+    date: "",
   });
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterDateRange, setFilterDateRange] = useState({ from: "", to: "" });
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/expenses', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setExpenses(res.data);
-      } catch (err) {
-        console.error('Error fetching expenses:', err);
-      }
-    };
-
-    fetchExpenses();
-  }, []);
-
-  const deleteExpense = async (id) => {
+  // Fetch expenses from backend (with filters)
+  const fetchExpenses = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const params = {};
+      if (filterCategory) params.category = filterCategory;
+      if (filterDateRange.from) params.from = filterDateRange.from;
+      if (filterDateRange.to) params.to = filterDateRange.to;
+
+      const res = await axios.get("http://localhost:5000/api/expenses", {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
       });
-      setExpenses((prev) => prev.filter((e) => e._id !== id));
+
+      setExpenses(res.data);
     } catch (err) {
-      console.error('Delete error:', err);
-      alert('❌ Could not delete expense');
+      console.error("Error fetching expenses:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchExpenses();
+  }, [filterCategory, filterDateRange]);
+
+  // Delete expense
+  const deleteExpense = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this expense?"))
+      return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setExpenses((prev) => prev.filter((e) => e._id !== id));
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("❌ Could not delete expense");
+    }
+  };
+
+  // Start editing
   const handleEdit = (expense) => {
     setEditId(expense._id);
     setEditForm({
       title: expense.title,
       amount: expense.amount,
       category: expense.category,
-      date: expense.date?.substring(0, 10) || '',
+      date: expense.date?.substring(0, 10) || "",
     });
   };
 
+  // Update expense
   const handleUpdate = async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const res = await axios.put(
         `http://localhost:5000/api/expenses/${id}`,
-        editForm,
+        { ...editForm, amount: Number(editForm.amount) }, // ensure amount is a number
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       setExpenses((prev) => prev.map((e) => (e._id === id ? res.data : e)));
       setEditId(null);
     } catch (err) {
-      console.error('Update error:', err);
-      alert('❌ Could not update expense');
+      console.error("Update error:", err);
+      alert("❌ Could not update expense");
     }
   };
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6 text-center text-green-600">💸 Expense History</h2>
-      {expenses.length === 0 ? (
+      <h2 className="text-2xl font-bold mb-6 text-center text-green-600">
+        💸 Expense History
+      </h2>
+
+      {/* Filter Inputs */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-4 justify-center">
+        <input
+          type="text"
+          placeholder="Filter by category"
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="border px-3 py-2 rounded-md focus:ring-2 focus:ring-blue-400"
+        />
+        <div className="flex gap-2">
+          <input
+            type="date"
+            value={filterDateRange.from}
+            onChange={(e) =>
+              setFilterDateRange({ ...filterDateRange, from: e.target.value })
+            }
+            className="border px-3 py-2 rounded-md focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="date"
+            value={filterDateRange.to}
+            onChange={(e) =>
+              setFilterDateRange({ ...filterDateRange, to: e.target.value })
+            }
+            className="border px-3 py-2 rounded-md focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+      </div>
+
+      {/* Expense List */}
+      {loading ? (
+        <p className="text-center text-gray-500">Loading expenses...</p>
+      ) : expenses.length === 0 ? (
         <p className="text-gray-500 text-center">No expenses found.</p>
       ) : (
         <ul className="space-y-4">
@@ -127,9 +175,13 @@ export default function ExpenseList({ expenses: initialExpenses }) {
                 </div>
               ) : (
                 <div className="flex flex-col text-gray-800 gap-1">
-                  <div className="text-lg font-semibold text-gray-800">{expense.title}</div>
-                  <div className="text-md font-bold text-green-700">₹{expense.amount}</div>
-                  <div className="text-sm text-gray-600 capitalize">📂 {expense.category}</div>
+                  <div className="text-lg font-semibold">{expense.title}</div>
+                  <div className="text-md font-bold text-green-700">
+                    ₹{expense.amount}
+                  </div>
+                  <div className="text-sm text-gray-600 capitalize">
+                    📂 {expense.category}
+                  </div>
                   {expense.date && (
                     <div className="text-sm text-gray-500">
                       📅 {new Date(expense.date).toLocaleDateString()}
