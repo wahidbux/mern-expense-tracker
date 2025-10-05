@@ -85,5 +85,22 @@ router.put("/:id", protect, async (req, res) => {
     res.status(500).json({ message: "Update failed", error: err.message });
   }
 });
+// @route   DELETE /api/expenses/:id
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    const deletedExpense = await Expense.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id, // ensure user can only delete their own expense
+    });
 
+    if (!deletedExpense) {
+      return res.status(404).json({ message: "Expense not found" });
+    }
+
+    res.json({ message: "Expense deleted successfully", expense: deletedExpense });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ message: "Delete failed", error: err.message });
+  }
+});
 module.exports = router;
