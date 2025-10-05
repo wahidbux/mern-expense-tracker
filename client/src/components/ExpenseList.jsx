@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default function ExpenseList({ expenses: initialExpenses }) {
   const [expenses, setExpenses] = useState(initialExpenses || []);
+  const [sortBy, setSortBy] = useState("date-desc");
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({
     title: "",
@@ -87,31 +88,40 @@ export default function ExpenseList({ expenses: initialExpenses }) {
       alert("❌ Could not update expense");
     }
   };
-  const filteredAndSortedExpenses = expenses
-    .filter((expense) => {
-      if (filterCategory && expense.category.toLowerCase() !== filterCategory.toLowerCase()) {
-        return false;
-      }
-      if (filterStartDate && new Date(expense.date) < new Date(filterStartDate)) {
-        return false;
-      }
-      if (filterEndDate && new Date(expense.date) > new Date(filterEndDate)) {
-        return false;
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'date-asc') {
-        return new Date(a.date) - new Date(b.date);
-      } else if (sortBy === 'date-desc') {
-        return new Date(b.date) - new Date(a.date);
-      } else if (sortBy === 'category-asc') {
-        return a.category.localeCompare(b.category);
-      } else if (sortBy === 'category-desc') {
-        return b.category.localeCompare(a.category);
-      }
-      return 0;
-    });
+ const filteredAndSortedExpenses = expenses
+  .filter((expense) => {
+    if (
+      filterCategory &&
+      expense.category.toLowerCase() !== filterCategory.toLowerCase()
+    ) {
+      return false;
+    }
+    if (
+      filterDateRange.from &&
+      new Date(expense.date) < new Date(filterDateRange.from)
+    ) {
+      return false;
+    }
+    if (
+      filterDateRange.to &&
+      new Date(expense.date) > new Date(filterDateRange.to)
+    ) {
+      return false;
+    }
+    return true;
+  })
+  .sort((a, b) => {
+    if (sortBy === "date-asc") {
+      return new Date(a.date) - new Date(b.date);
+    } else if (sortBy === "date-desc") {
+      return new Date(b.date) - new Date(a.date);
+    } else if (sortBy === "category-asc") {
+      return a.category.localeCompare(b.category);
+    } else if (sortBy === "category-desc") {
+      return b.category.localeCompare(a.category);
+    }
+    return 0;
+  });
   const categories = [...new Set(expenses.map((expense) => expense.category))];
 
   return (
