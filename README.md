@@ -14,8 +14,8 @@ A full-stack Expense Tracker application built with the MERN stack (MongoDB, Exp
   <img src="https://img.shields.io/badge/MERN-Expense%20Tracker-%2300a86b?style=for-the-badge&logo=appveyor" alt="MERN Expense Tracker" />
 
   <!-- Polished SVG header + subtitle -->
-  <p>
-    <img src="./client/src/assets/logo.svg" alt="MERN Expense Tracker" width="760" />
+  <p align="center>
+    <img src="./client/src/assets/logo.svg" alt="MERN Expense Tracker" width=90% height=auto max-width=760px />
   </p>
 
   <!-- Tech badges -->
