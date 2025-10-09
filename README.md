@@ -15,7 +15,7 @@ A full-stack Expense Tracker application built with the MERN stack (MongoDB, Exp
 
   <!-- Polished SVG header + subtitle -->
   <p align="center>
-    <img src="./client/src/assets/logo.svg" alt="MERN Expense Tracker" width=90% height=auto max-width=760px />
+    <img src="./client/src/assets/logo.svg" alt="MERN Expense Tracker" width=760/>
   </p>
 
   <!-- Tech badges -->
