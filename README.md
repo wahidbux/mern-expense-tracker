@@ -14,7 +14,7 @@ A full-stack Expense Tracker application built with the MERN stack (MongoDB, Exp
   <img src="https://img.shields.io/badge/MERN-Expense%20Tracker-%2300a86b?style=for-the-badge&logo=appveyor" alt="MERN Expense Tracker" />
 
   <!-- Polished SVG header + subtitle -->
-  <p align="center>
+  <p>
     <img src="./client/src/assets/logo.svg" alt="MERN Expense Tracker" width="760"/>
   </p>
 
@@ -121,3 +121,4 @@ For Hacktoberfest 2025: label your PR with `hacktoberfest` if it follows the pro
 ---
 
 Maintainer: Assigned — coordinate via GitHub issues. 🧑‍🔧
+
