@@ -53,12 +53,14 @@ function App() {
     >
       <div className={`max-w-4xl mx-auto  ${darkMode ? "bg-slate-700" : "bg-slate-200"} rounded-xl shadow p-4 sm:p-6`}>
         <div className="flex justify-between items-center mb-6">
-          <h1 className={`text-3xl font-bold ${darkMode ? "text-violet-800" : "text-green-600"  }`}>
-            💰 Expense Tracker
-          </h1>
+          
+          <Link className={`text-3xl font-bold ${darkMode ? "text-violet-800" : "text-green-600"}`} to="/">
+          💰 Expense Tracker
+          </Link>
+
           <button
             onClick={toggleDarkMode}
-            className={`text-sm px-3 py-1 ${darkMode ?"bg-gray-700" : "bg-gray-200"} ${darkMode ? "text-white" : "text-balck"} rounded ${darkMode ? "hover:bg-gray-600": "hover:bg-gray-300"} transition`}
+            className={`text-sm px-3 py-1 ${darkMode ?"bg-gray-700" : "bg-gray-200"} ${darkMode ? "text-white" : "text-black"} rounded ${darkMode ? "hover:bg-gray-600": "hover:bg-gray-300"} transition`}
           >
             {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
           </button>
@@ -117,7 +119,7 @@ function App() {
           <Route
             path="/"
             element={
-              <p className={`text-center text-lg font-semibold ${ darkMode ? "text-white" : "text-black-900"  }`}>
+              <p className={`text-center text-lg font-semibold ${ darkMode ? "text-white" : "text-black"  }`}>
                 Welcome! Choose an option above.
               </p>
             }
