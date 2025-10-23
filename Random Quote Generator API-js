@@ -1,0 +1,15 @@
+import express from "express";
+const app = express();
+
+const quotes = [
+  "Code is like humor. When you have to explain it, it’s bad.",
+  "Experience is the name everyone gives to their mistakes.",
+  "In order to be irreplaceable, one must always be different."
+];
+
+app.get("/quote", (req, res) => {
+  const random = quotes[Math.floor(Math.random() * quotes.length)];
+  res.json({ quote: random });
+});
+
+app.listen(3005, () => console.log("Quotes API on 3005"));
